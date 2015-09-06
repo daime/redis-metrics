@@ -1,12 +1,36 @@
 # RedisMetrics
 
 ## Build
+**REMEMBER TO USE GO DIRECTORY STRUCTURE**
+The project is based on go's default directory structure and uses `Makefile` to
+handle the build tasks.
 
-First place correct variables for building
-`make env`
+### Building
+This will compile and create the executable in the project's root directory
+```bash
+make build
+```
 
-Then build the project
-`make`
+### Installing
+This will compile and install the project in your `$GOPATH`
+```bash
+make install
+```
 
-To run:
-`./bin/redis-metrics`
+### Testing
+
+```bash
+make test
+```
+
+### Running
+
+```bash
+make run
+```
+
+Or
+
+```
+redis-metrics
+```

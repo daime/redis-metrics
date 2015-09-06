@@ -1,6 +1,6 @@
 all: install
 
-run: build
+run: install
 	redis-metrics
 
 build: dependencies

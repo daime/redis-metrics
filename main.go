@@ -2,24 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/garyburd/redigo/redis"
 )
-
-var c = `{
-	"interval": 1,
-	"addresses": [
-		"redis:6379"
-	],
-	"metrics": [
-		"used_memory"
-	]
-}`
 
 type configuration struct {
 	Interval  int64    `json:"interval"`
@@ -35,7 +23,9 @@ func main() {
 	for {
 		select {
 		case <-tickerChannel:
-			go info(config)
+			for _, address := range config.Addresses {
+				go info(address, config.Metrics)
+			}
 		}
 	}
 }
@@ -57,15 +47,13 @@ func readConfiguration(fileName string) configuration {
 	return config
 }
 
-func info(c configuration) {
-	// TODO make it multiple addresses
-	address := c.Addresses[0]
-
+func info(address string, metrics []string) {
 	connection, err := redis.Dial("tcp", address)
 	if err != nil {
 		log.Fatalf("Error connecting to Redis: %s", err)
 		return
 	}
+	defer connection.Close()
 
 	reply, err := connection.Do("INFO")
 	if err != nil {
@@ -73,14 +61,22 @@ func info(c configuration) {
 		return
 	}
 
-	content := fmt.Sprintf("%s", reply)
+	// Transform selected metrics slice to map
+	metricsMap := make(map[string]bool, len(metrics))
+	for _, metric := range metrics {
+		metricsMap[metric] = true
+	}
 
-	for _, line := range strings.Split(content, "\n") {
-		if strings.Contains(line, ":") {
-			parts := strings.Split(line, ":")
-			fmt.Println(parts[0], parts[1])
+	// Create a map to store only matching metrics
+	replies := make(map[string]float64, len(metrics))
+
+	for metric, value := range Parse(reply.([]byte)) {
+		if _, hasKey := metricsMap[metric]; hasKey {
+			replies[metric] = value
 		}
 	}
 
-	fmt.Println(c)
+	for metric, value := range replies {
+		log.Printf("%s | %s => %f\r", address, metric, value)
+	}
 }

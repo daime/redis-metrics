@@ -17,3 +17,8 @@ test:
 
 clean:
 	go clean
+
+docker:
+	docker-compose rm
+	docker-compose build
+	docker-compose up

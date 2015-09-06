@@ -3,8 +3,11 @@ all: install
 run: install
 	redis-metrics
 
-build: dependencies
+install:
 	go install github.com/daime/redis-metrics
+
+build: dependencies
+	go build ./...
 
 dependencies:
 	go get github.com/garyburd/redigo/redis

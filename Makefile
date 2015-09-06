@@ -18,7 +18,9 @@ test:
 clean:
 	go clean
 
-docker:
+docker-clean:
 	docker-compose rm -f
+
+docker: docker-clean
 	docker-compose build
 	docker-compose up

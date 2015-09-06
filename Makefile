@@ -10,7 +10,7 @@ build: dependencies
 	go build ./...
 
 dependencies:
-	go get github.com/garyburd/redigo/redis
+	go get ./...
 
 test:
 	go test

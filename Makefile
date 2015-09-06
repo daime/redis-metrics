@@ -1,13 +1,19 @@
 all: build
 
 run: build
-	./bin/redis-metrics
+	redis-metrics
 
 build: dependencies
-	go build .
+	go install github.com/daime/redis-metrics
 
 dependencies:
-	go get -u -d ./...
+	go get github.com/garyburd/redigo/redis
 
 test:
-	docker-compose up
+	go test
+
+clean:
+	go clean
+
+env:
+	export GOPATH=${GOPATH}:${PWD}

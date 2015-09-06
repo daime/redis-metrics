@@ -1,0 +1,9 @@
+{
+  "interval": 1,
+    "addresses": [
+      "redis:6379"
+    ],
+    "metrics": [
+      "used_memory"
+    ]
+}

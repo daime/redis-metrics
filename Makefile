@@ -17,6 +17,3 @@ test:
 
 clean:
 	go clean
-
-env:
-	export GOPATH=${GOPATH}:${PWD}

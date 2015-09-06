@@ -19,6 +19,6 @@ clean:
 	go clean
 
 docker:
-	docker-compose rm
+	docker-compose rm -f
 	docker-compose build
 	docker-compose up

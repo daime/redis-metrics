@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -27,12 +28,10 @@ type configuration struct {
 }
 
 func main() {
-	var conf configuration
-	err := json.Unmarshal([]byte(c), &conf)
+	conf, err := ReadConfigurations("config.json")
 	if err != nil {
 		log.Fatalf("Error unmarshaling configuration: %s", err)
 	}
-
 	tickerChannel := time.NewTicker(time.Second * time.Duration(conf.Interval)).C
 
 	for {
@@ -41,6 +40,14 @@ func main() {
 			go info(conf)
 		}
 	}
+}
+
+func ReadConfigurations(fileName string) (configuration, error) {
+	var conf configuration
+	file, _ := os.Open(fileName)
+	decoder := json.NewDecoder(file)
+	err := decoder.Decode(&conf)
+	return conf, err
 }
 
 func info(c configuration) {

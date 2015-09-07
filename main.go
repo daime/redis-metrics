@@ -46,7 +46,7 @@ func readConfigurations(fileName string) configuration {
 	decoder := json.NewDecoder(file)
 	err := decoder.Decode(&conf)
 	if err != nil {
-		log.Fatalf("Failed to load configuration: %s", err)
+		log.Fatalf("Failed to load configuration from %s: %s", fileName, err)
 	}
 	return conf
 }
@@ -57,7 +57,7 @@ func info(c configuration) {
 
 	connection, err := redis.Dial("tcp", address)
 	if err != nil {
-		log.Fatalf("Error dialing redis on address %s: %s", address, err)
+		log.Fatalf("Error connecting to Redis: %s", err)
 		return
 	}
 

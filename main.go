@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 	"strings"
 	"time"
 
@@ -27,20 +28,33 @@ type configuration struct {
 }
 
 func main() {
-	var conf configuration
-	err := json.Unmarshal([]byte(c), &conf)
-	if err != nil {
-		log.Fatalf("Error unmarshaling configuration: %s", err)
-	}
+	config := readConfiguration("config.json")
 
-	tickerChannel := time.NewTicker(time.Second * time.Duration(conf.Interval)).C
+	tickerChannel := time.NewTicker(time.Second * time.Duration(config.Interval)).C
 
 	for {
 		select {
 		case <-tickerChannel:
-			go info(conf)
+			go info(config)
 		}
 	}
+}
+
+func readConfiguration(fileName string) configuration {
+	var config configuration
+
+	file, err := os.Open(fileName)
+	if err != nil {
+		log.Fatalf("Error loading configuration file from %s: %s", fileName, err)
+	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	if err := decoder.Decode(&config); err != nil {
+		log.Fatalf("Error decoding JSON from %s: %s", fileName, err)
+	}
+
+	return config
 }
 
 func info(c configuration) {
@@ -49,7 +63,7 @@ func info(c configuration) {
 
 	connection, err := redis.Dial("tcp", address)
 	if err != nil {
-		log.Fatalf("Error dialing redis on address %s: %s", address, err)
+		log.Fatalf("Error connecting to Redis: %s", err)
 		return
 	}
 

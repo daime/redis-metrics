@@ -13,7 +13,7 @@ import (
 var c = `{
 	"interval": 1,
 	"addresses": [
-		"localhost:6379"
+		"redis:6379"
 	],
 	"metrics": [
 		"used_memory"

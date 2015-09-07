@@ -42,6 +42,7 @@ func main() {
 func readConfigurations(fileName string) configuration {
 	var conf configuration
 	file, _ := os.Open(fileName)
+	defer file.Close()
 	decoder := json.NewDecoder(file)
 	err := decoder.Decode(&conf)
 	if err != nil {

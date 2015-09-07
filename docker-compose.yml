@@ -1,9 +1,15 @@
 redis_metrics:
     build: .
     links:
-        - redis
+        - redis_1
+        - redis_2
 
-redis:
+redis_1:
+  image: redis
+  ports:
+    - "6379"
+
+redis_2:
   image: redis
   ports:
     - "6379"

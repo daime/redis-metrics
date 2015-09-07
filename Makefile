@@ -4,7 +4,7 @@ run: install
 	redis-metrics
 
 install: dependencies
-	go install github.com/daime/redis-metrics
+	go install ./...
 
 build: dependencies
 	go build ./...

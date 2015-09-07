@@ -28,10 +28,7 @@ type configuration struct {
 }
 
 func main() {
-	conf, err := ReadConfigurations("config.json")
-	if err != nil {
-		log.Fatalf("Error unmarshaling configuration: %s", err)
-	}
+	conf := readConfigurations("config.json")
 	tickerChannel := time.NewTicker(time.Second * time.Duration(conf.Interval)).C
 
 	for {
@@ -42,12 +39,15 @@ func main() {
 	}
 }
 
-func ReadConfigurations(fileName string) (configuration, error) {
+func ReadConfigurations(fileName string) configuration {
 	var conf configuration
 	file, _ := os.Open(fileName)
 	decoder := json.NewDecoder(file)
 	err := decoder.Decode(&conf)
-	return conf, err
+	if err != nil {
+		log.Fatalf("Failed to load configuration: %s", err)
+	}
+	return conf
 }
 
 func info(c configuration) {

@@ -28,27 +28,33 @@ type configuration struct {
 }
 
 func main() {
-	conf := readConfigurations("config.json")
-	tickerChannel := time.NewTicker(time.Second * time.Duration(conf.Interval)).C
+	config := readConfiguration("config.json")
+
+	tickerChannel := time.NewTicker(time.Second * time.Duration(config.Interval)).C
 
 	for {
 		select {
 		case <-tickerChannel:
-			go info(conf)
+			go info(config)
 		}
 	}
 }
 
-func readConfigurations(fileName string) configuration {
-	var conf configuration
-	file, _ := os.Open(fileName)
-	defer file.Close()
-	decoder := json.NewDecoder(file)
-	err := decoder.Decode(&conf)
+func readConfiguration(fileName string) configuration {
+	var config configuration
+
+	file, err := os.Open(fileName)
 	if err != nil {
-		log.Fatalf("Failed to load configuration from %s: %s", fileName, err)
+		log.Fatalf("Error loading configuration file from %s: %s", fileName, err)
 	}
-	return conf
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	if err := decoder.Decode(&config); err != nil {
+		log.Fatalf("Error decoding JSON from %s: %s", fileName, err)
+	}
+
+	return config
 }
 
 func info(c configuration) {

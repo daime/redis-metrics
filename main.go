@@ -39,7 +39,7 @@ func main() {
 	}
 }
 
-func ReadConfigurations(fileName string) configuration {
+func readConfigurations(fileName string) configuration {
 	var conf configuration
 	file, _ := os.Open(fileName)
 	decoder := json.NewDecoder(file)

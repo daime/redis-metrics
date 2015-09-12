@@ -4,6 +4,8 @@
       "redis:6379"
     ],
     "metrics": [
-      "used_memory"
+      "used_memory",
+      "mem_fragmentation_ratio",
+      "db0.keys"
     ]
 }

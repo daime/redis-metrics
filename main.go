@@ -50,14 +50,14 @@ func readConfiguration(fileName string) configuration {
 func info(address string, metrics []string) {
 	connection, err := redis.Dial("tcp", address)
 	if err != nil {
-		log.Fatalf("Error connecting to Redis: %s", err)
+		log.Printf("Error connecting to Redis: %s", err)
 		return
 	}
 	defer connection.Close()
 
 	reply, err := connection.Do("INFO")
 	if err != nil {
-		log.Fatalf("Error doing INFO command: %s", err)
+		log.Printf("Error doing INFO command: %s", err)
 		return
 	}
 

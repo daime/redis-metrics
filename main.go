@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 	"time"
-
+	"github.com/daime/redis-metrics/parse"
 	"github.com/garyburd/redigo/redis"
 )
 
@@ -70,7 +70,7 @@ func info(address string, metrics []string) {
 	// Create a map to store only matching metrics
 	replies := make(map[string]float64, len(metrics))
 
-	for metric, value := range Parse(reply.([]byte)) {
+	for metric, value := range parse.Parse(reply.([]byte)) {
 		if _, hasKey := metricsMap[metric]; hasKey {
 			replies[metric] = value
 		}

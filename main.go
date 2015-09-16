@@ -1,22 +1,15 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
-	"os"
 	"time"
 
+	"github.com/daime/redis-metrics/configuration"
 	"github.com/daime/redis-metrics/redis"
 )
 
-type configuration struct {
-	Interval  int64    `json:"interval"`
-	Addresses []string `json:"addresses"`
-	Metrics   []string `json:"metrics"`
-}
-
 func main() {
-	config := readConfiguration("config.json")
+	config := configuration.Load("config.json")
 
 	tickerChannel := time.NewTicker(time.Second * time.Duration(config.Interval)).C
 
@@ -28,23 +21,6 @@ func main() {
 			}
 		}
 	}
-}
-
-func readConfiguration(fileName string) configuration {
-	var config configuration
-
-	file, err := os.Open(fileName)
-	if err != nil {
-		log.Fatalf("Error loading configuration file from %s: %s", fileName, err)
-	}
-	defer file.Close()
-
-	decoder := json.NewDecoder(file)
-	if err := decoder.Decode(&config); err != nil {
-		log.Fatalf("Error decoding JSON from %s: %s", fileName, err)
-	}
-
-	return config
 }
 
 func info(address string, metrics []string) {

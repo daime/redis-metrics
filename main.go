@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/garyburd/redigo/redis"
+	"github.com/daime/redis-metrics/redis"
 )
 
 type configuration struct {
@@ -48,19 +48,6 @@ func readConfiguration(fileName string) configuration {
 }
 
 func info(address string, metrics []string) {
-	connection, err := redis.Dial("tcp", address)
-	if err != nil {
-		log.Printf("Error connecting to Redis: %s", err)
-		return
-	}
-	defer connection.Close()
-
-	reply, err := connection.Do("INFO")
-	if err != nil {
-		log.Printf("Error doing INFO command: %s", err)
-		return
-	}
-
 	// Transform selected metrics slice to map
 	metricsMap := make(map[string]bool, len(metrics))
 	for _, metric := range metrics {
@@ -70,13 +57,23 @@ func info(address string, metrics []string) {
 	// Create a map to store only matching metrics
 	replies := make(map[string]float64, len(metrics))
 
-	for metric, value := range Parse(reply.([]byte)) {
+	infoRequest := &redis.InfoRequest{
+		Address: address,
+	}
+	infoResponse, err := infoRequest.Send()
+	if err != nil {
+		log.Printf("Error getting redis info: %v", err)
+		return
+	}
+
+	for metric, value := range infoResponse.Metrics {
 		if _, hasKey := metricsMap[metric]; hasKey {
 			replies[metric] = value
 		}
 	}
 
+	log.Printf("%s | %s => %v\n", address, "parsed at", infoResponse.ParsedAt)
 	for metric, value := range replies {
-		log.Printf("%s | %s => %f\r", address, metric, value)
+		log.Printf("%s | %s => %f\n", address, metric, value)
 	}
 }

@@ -1,10 +1,8 @@
-package main_test
+package redis
 
 import (
 	"reflect"
 	"testing"
-
-	"github.com/daime/redis-metrics"
 )
 
 func TestParse(t *testing.T) {
@@ -19,7 +17,7 @@ func TestParse(t *testing.T) {
 		db1:keys=456,expires=48,avg_ttl=67890
 	`
 
-	lines := main.Parse([]byte(info))
+	lines := Parse([]byte(info))
 
 	expected := map[string]float64{
 		"used_memory": 1000000,

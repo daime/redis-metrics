@@ -8,5 +8,9 @@
         "used_memory",
         "mem_fragmentation_ratio",
         "db0.keys"
-    ]
+    ],
+    "statsd": {
+        "host": "statsd",
+        "port": 8125
+    }
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/daime/redis-metrics/configuration"
 	"github.com/daime/redis-metrics/redis"
+	"github.com/daime/redis-metrics/statsd"
 )
 
 func main() {
@@ -17,21 +18,21 @@ func main() {
 		select {
 		case <-tickerChannel:
 			for _, address := range config.Addresses {
-				go info(address, config.Metrics)
+				go info(address, config)
 			}
 		}
 	}
 }
 
-func info(address string, metrics []string) {
+func info(address string, config configuration.Configuration) {
 	// Transform selected metrics slice to map
-	metricsMap := make(map[string]bool, len(metrics))
-	for _, metric := range metrics {
+	metricsMap := make(map[string]bool, len(config.Metrics))
+	for _, metric := range config.Metrics {
 		metricsMap[metric] = true
 	}
 
 	// Create a map to store only matching metrics
-	replies := make(map[string]float64, len(metrics))
+	replies := make(map[string]float64, len(config.Metrics))
 
 	infoRequest := &redis.InfoRequest{
 		Address: address,
@@ -48,8 +49,6 @@ func info(address string, metrics []string) {
 		}
 	}
 
-	log.Printf("%s | %s => %v\n", address, "parsed at", infoResponse.ParsedAt)
-	for metric, value := range replies {
-		log.Printf("%s | %s => %f\n", address, metric, value)
-	}
+	s := statsd.NewStatsd(config.Statsd.Host, config.Statsd.Port)
+	s.BulkGauge(address, replies)
 }

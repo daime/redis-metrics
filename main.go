@@ -34,9 +34,7 @@ func info(address string, config configuration.Configuration) {
 	// Create a map to store only matching metrics
 	replies := make(map[string]float64, len(config.Metrics))
 
-	infoRequest := &redis.InfoRequest{
-		Address: address,
-	}
+	infoRequest := redis.NewInfoRequest(address)
 	infoResponse, err := infoRequest.Send()
 	if err != nil {
 		log.Printf("Error getting redis info: %v", err)

@@ -2,15 +2,25 @@ package main
 
 import (
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
-	"github.com/daime/redis-metrics/configuration"
 	"github.com/daime/redis-metrics/redis"
-	"github.com/daime/redis-metrics/statsd"
 )
 
 func main() {
-	config := configuration.Load("config.json")
+	signalChannel := make(chan os.Signal, 1)
+	signal.Notify(signalChannel, syscall.SIGINT, syscall.SIGTERM)
+	go func() {
+		for sig := range signalChannel {
+			log.Printf("Catch you later: %s\n", sig)
+			os.Exit(0)
+		}
+	}()
+
+	config := readConfiguration("config.json")
 
 	tickerChannel := time.NewTicker(time.Second * time.Duration(config.Interval)).C
 

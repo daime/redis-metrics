@@ -21,6 +21,6 @@ clean:
 docker-clean:
 	docker-compose rm -f
 
-docker: docker-clean
+docker: build docker-clean
 	docker-compose build
 	docker-compose up

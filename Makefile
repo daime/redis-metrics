@@ -15,6 +15,15 @@ dependencies:
 test:
 	go test -v ./...
 
+coverage-ci:
+	mkdir -p _test
+	go get -u github.com/pierrre/gotestcover
+	gotestcover -coverprofile=_test/cover.out ./...
+	go tool cover -html=_test/cover.out -o=_test/cover.html
+
+coverage: coverage-ci
+	open _test/cover.html
+
 clean:
 	go clean
 

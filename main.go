@@ -7,7 +7,9 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/daime/redis-metrics/configuration"
 	"github.com/daime/redis-metrics/redis"
+	"github.com/daime/redis-metrics/statsd"
 )
 
 func main() {
@@ -20,7 +22,7 @@ func main() {
 		}
 	}()
 
-	config := readConfiguration("config.json")
+	config := configuration.Load("config.json")
 
 	tickerChannel := time.NewTicker(time.Second * time.Duration(config.Interval)).C
 

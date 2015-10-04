@@ -10,7 +10,7 @@ const (
 	address = "localhost:6379"
 )
 
-func TestInfo(t *testing.T) {
+func TestSend(t *testing.T) {
 	reply := "used_memory:1234.56"
 
 	expectedMetrics := make(map[string]float64, 1)

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/daime/redis-metrics/configuration"
+	"github.com/daime/redis-metrics/log"
 	"github.com/daime/redis-metrics/redis"
 	"github.com/daime/redis-metrics/signal"
 	"github.com/daime/redis-metrics/statsd"

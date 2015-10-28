@@ -1,3 +1,5 @@
+WATCH_INTERVAL=5
+
 all: install
 
 run: install
@@ -13,7 +15,10 @@ dependencies:
 	go get ./...
 
 test:
-	go test -v ./...
+	go test ./...
+
+watch:
+	watch -n ${WATCH_INTERVAL} make clean test
 
 coverage-ci:
 	mkdir -p _test

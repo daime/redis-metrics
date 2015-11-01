@@ -25,11 +25,12 @@ make test
 
 ### Running
 
+Options
 ```bash
-make run
+  [-c, --config]    Specify the configuration file directory (default: config.json)
 ```
 
-Or
+Running:
 
 ```
 redis-metrics

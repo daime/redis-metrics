@@ -1,15 +1,19 @@
 WATCH_INTERVAL=5
+TARGET=dist/
 
 all: install
-
-run: install
-	redis-metrics
 
 install: dependencies
 	go install ./...
 
 build: dependencies
 	go build ./...
+
+dist: dependencies
+	mkdir -p ${TARGET}
+	GOARCH=amd64 GOOS=linux go build -o ${TARGET}redis-metrics-linux-amd64
+	GOARCH=386 GOOS=linux go build -o ${TARGET}redis-metrics-linux-386
+	GOARCH=amd64 GOOS=darwin go build -o ${TARGET}redis-metrics-darwin-amd64
 
 dependencies:
 	go get ./...
@@ -30,6 +34,7 @@ coverage: coverage-ci
 	open _test/cover.html
 
 clean:
+	rm -rf ${TARGET}
 	go clean
 
 docker-clean:

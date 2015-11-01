@@ -8,6 +8,7 @@ import (
 	"github.com/daime/redis-metrics/redis"
 	"github.com/daime/redis-metrics/signal"
 	"github.com/daime/redis-metrics/statsd"
+	"github.com/daime/redis-metrics/util"
 )
 
 func main() {
@@ -29,10 +30,8 @@ func main() {
 
 func info(address string, config configuration.Configuration) {
 	// Transform selected metrics slice to map
-	metricsMap := make(map[string]bool, len(config.Metrics))
-	for _, metric := range config.Metrics {
-		metricsMap[metric] = true
-	}
+	metricsSet := util.NewSet()
+	metricsSet.AppendAll(config.Metrics)
 
 	// Create a map to store only matching metrics
 	replies := make(map[string]float64, len(config.Metrics))
@@ -45,7 +44,7 @@ func info(address string, config configuration.Configuration) {
 	}
 
 	for metric, value := range infoResponse.Metrics {
-		if _, hasKey := metricsMap[metric]; hasKey {
+		if metricsSet.Contains(metric) {
 			replies[metric] = value
 		}
 	}

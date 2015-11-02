@@ -1,5 +1,7 @@
 # RedisMetrics
 
+![Circle CI](https://circleci.com/gh/daime/redis-metrics.png?circle-token=c4c434aa19cecdcde9712216ca1e98fc0801a455)
+
 ## Build
 **REMEMBER TO USE GO DIRECTORY STRUCTURE**
 The project is based on go's default directory structure and uses `Makefile` to

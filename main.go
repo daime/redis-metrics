@@ -22,10 +22,13 @@ func init() {
 
 func main() {
 	flag.Parse()
-	signal.Handle()
 
 	log.Printf("Configuration loaded from file: %s", configFilePath)
 	config := configuration.Load(configFilePath)
+	signal.Handle(func() {
+		config = configuration.Load("config.json")
+		log.Printf("Reloading configuration from: %s", configFilePath)
+	})
 
 	tickerChannel := time.NewTicker(time.Second * time.Duration(config.Interval)).C
 

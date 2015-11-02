@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"time"
 
@@ -11,10 +12,20 @@ import (
 	"github.com/daime/redis-metrics/util"
 )
 
+var (
+	configFilePath string
+)
+
+func init() {
+	flag.StringVar(&configFilePath, "config", "config.json", "Specify the configuration file path")
+}
+
 func main() {
+	flag.Parse()
 	signal.Handle()
 
-	config := configuration.Load("config.json")
+	log.Printf("Configuration loaded from file: %s", configFilePath)
+	config := configuration.Load(configFilePath)
 
 	tickerChannel := time.NewTicker(time.Second * time.Duration(config.Interval)).C
 

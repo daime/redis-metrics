@@ -33,6 +33,7 @@ func main() {
 	})
 
 	tickerChannel := time.NewTicker(time.Second * time.Duration(config.Interval)).C
+	log.Printf("Starting ticker every %d seconds", config.Interval)
 
 	for {
 		select {

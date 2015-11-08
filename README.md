@@ -1,6 +1,6 @@
 # RedisMetrics
 
-![Circle CI](https://circleci.com/gh/daime/redis-metrics.png?circle-token=c4c434aa19cecdcde9712216ca1e98fc0801a455)
+[![Circle CI](https://circleci.com/gh/daime/redis-metrics.png?circle-token=c4c434aa19cecdcde9712216ca1e98fc0801a455)](https://circleci.com/gh/daime/redis-metrics)
 
 ## Build
 **REMEMBER TO USE GO DIRECTORY STRUCTURE**

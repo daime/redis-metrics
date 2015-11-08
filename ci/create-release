@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+require 'octokit'
+require 'logger'
+LOGGER = Logger.new(STDOUT)
+
+repo = "#{ENV['CIRCLE_PROJECT_USERNAME']}/#{ENV['CIRCLE_PROJECT_REPONAME']}"
+tag = ENV['CIRCLE_TAG']
+github = Octokit::Client.new
+
+def get_changes(tag)
+  tags = `git tag`.split("\n")
+  idx = tags.index(tag)
+  previous_tag = tags[idx+1]
+  changes = `git log --oneline --pretty='* %s' #{previous_tag}..#{tag}`
+  LOGGER.info("Found changes.\n#{changes}")
+  changes
+end
+
+changes = get_changes(tag)
+LOGGER.info("Creating draft release for #{tag}")
+release = github.create_release(repo, tag, draft: true, body: changes)
+Dir['dist/*'].each do |asset|
+  LOGGER.info("Uploading asset: #{asset}")
+  github.upload_asset(release.url, asset, content_type: 'application/octet-stream')
+end

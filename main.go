@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"time"
 
@@ -35,14 +36,18 @@ func main() {
 	for {
 		select {
 		case <-tickerChannel:
+			for _, redisConfig := range config.Redis {
+				address := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
+				go info(address, redisConfig.Alias, config)
+			}
 			for _, address := range config.Addresses {
-				go info(address, config)
+				go info(address, address, config)
 			}
 		}
 	}
 }
 
-func info(address string, config configuration.Configuration) {
+func info(address string, alias string, config configuration.Configuration) {
 	// Transform selected metrics slice to map
 	metricsSet := util.NewSet()
 	metricsSet.AppendAll(config.Metrics)
@@ -64,5 +69,5 @@ func info(address string, config configuration.Configuration) {
 	}
 
 	s := statsd.NewStatsd(config.Statsd.Host, config.Statsd.Port)
-	s.BulkGauge(address, replies)
+	s.BulkGauge(alias, replies)
 }

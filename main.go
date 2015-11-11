@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/daime/redis-metrics/configuration"
@@ -38,10 +39,17 @@ func main() {
 		case <-tickerChannel:
 			for _, redisConfig := range config.Redis {
 				address := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
-				go info(address, redisConfig.Alias, config)
+				var alias = ""
+				if redisConfig.Alias != "" {
+					alias = redisConfig.Alias
+				} else {
+					alias = redisConfig.Host
+				}
+				go info(address, alias, config)
 			}
 			for _, address := range config.Addresses {
-				go info(address, address, config)
+				alias := strings.Replace(address, ":", ".", 1)
+				go info(address, alias, config)
 			}
 		}
 	}
@@ -64,10 +72,11 @@ func info(address string, alias string, config configuration.Configuration) {
 
 	for metric, value := range infoResponse.Metrics {
 		if metricsSet.Contains(metric) {
-			replies[metric] = value
+			metricName := fmt.Sprintf("%s.%s", alias, metric)
+			replies[metricName] = value
 		}
 	}
 
 	s := statsd.NewStatsd(config.Statsd.Host, config.Statsd.Port)
-	s.BulkGauge(alias, replies)
+	s.BulkGauge(replies)
 }

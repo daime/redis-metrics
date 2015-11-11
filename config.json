@@ -12,10 +12,6 @@
         "alias": "slave"
       }
     ],
-    "addresses": [
-        "redis_1:6379",
-        "redis_2:6379"
-    ],
     "metrics": [
         "used_memory",
         "mem_fragmentation_ratio",

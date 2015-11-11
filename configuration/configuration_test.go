@@ -21,10 +21,6 @@ func TestLoad(t *testing.T) {
 				Alias: "slave",
 			},
 		},
-		Addresses: []string{
-			"redis_1:6379",
-			"redis_2:6379",
-		},
 		Metrics: []string{
 			"used_memory",
 			"mem_fragmentation_ratio",

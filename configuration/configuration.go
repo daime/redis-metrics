@@ -23,8 +23,6 @@ type Configuration struct {
 	Interval int64 `json:"interval"`
 	// Redis stores host port and the aliases for the redis instances.
 	Redis []Redis `json:"redis"`
-	// Addresses stores a list of redis instances to query.
-	Addresses []string `json:"addresses"`
 	// Metrics stores a list of redis infomations to send to statsd.
 	Metrics []string `json:"metrics"`
 	// Statsd stores host and port that will receive the metrics.

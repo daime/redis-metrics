@@ -47,10 +47,6 @@ func main() {
 				}
 				go info(address, alias, config)
 			}
-			for _, address := range config.Addresses {
-				alias := strings.Replace(address, ":", ".", 1)
-				go info(address, alias, config)
-			}
 		}
 	}
 }

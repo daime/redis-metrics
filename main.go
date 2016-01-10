@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"strings"
 	"time"
 
 	"github.com/daime/redis-metrics/configuration"

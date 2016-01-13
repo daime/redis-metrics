@@ -38,19 +38,19 @@ func main() {
 		case <-tickerChannel:
 			for _, redisConfig := range config.Redis {
 				address := fmt.Sprintf("%s:%d", redisConfig.Host, redisConfig.Port)
-				var alias = ""
+				var name = ""
 				if redisConfig.Alias != "" {
-					alias = redisConfig.Alias
+					name = redisConfig.Alias
 				} else {
-					alias = redisConfig.Host
+					name = redisConfig.Host
 				}
-				go info(address, alias, config)
+				go info(address, name, config)
 			}
 		}
 	}
 }
 
-func info(address string, alias string, config configuration.Configuration) {
+func info(address string, name string, config configuration.Configuration) {
 	// Transform selected metrics slice to map
 	metricsSet := util.NewSet()
 	metricsSet.AppendAll(config.Metrics)
@@ -67,7 +67,7 @@ func info(address string, alias string, config configuration.Configuration) {
 
 	for metric, value := range infoResponse.Metrics {
 		if metricsSet.Contains(metric) {
-			metricName := fmt.Sprintf("%s.%s", alias, metric)
+			metricName := fmt.Sprintf("%s.%s", name, metric)
 			replies[metricName] = value
 		}
 	}

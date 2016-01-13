@@ -15,6 +15,7 @@ func receiveOnce(t *testing.T, done <-chan bool) {
 		t.Error("Receive timeout")
 	}
 }
+
 func Test_Handle_WithSIGHUP_ExecutesFn(t *testing.T) {
 	done := make(chan bool, 1)
 	signal.Handle(func() { done <- true })
@@ -24,16 +25,11 @@ func Test_Handle_WithSIGHUP_ExecutesFn(t *testing.T) {
 
 func Test_Handle_With2_SIGHUP_ExecutesFnTwice(t *testing.T) {
 	done := make(chan bool, 1)
-	value := 0
 	signal.Handle(func() {
 		done <- true
-		value++
 	})
 	syscall.Kill(syscall.Getpid(), syscall.SIGHUP)
 	receiveOnce(t, done)
 	syscall.Kill(syscall.Getpid(), syscall.SIGHUP)
 	receiveOnce(t, done)
-	if value != 2 {
-		t.Error("Handle not updated value")
-	}
 }

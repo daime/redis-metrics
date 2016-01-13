@@ -1,8 +1,16 @@
 {
     "interval": 1,
-    "addresses": [
-        "redis_1:6379",
-        "redis_2:6379"
+    "redis": [
+      {
+        "host": "redis_1",
+        "port": 6379,
+        "alias": "master"
+      },
+      {
+        "host": "redis_2",
+        "port": 6379,
+        "alias": "slave"
+      }
     ],
     "metrics": [
         "used_memory",

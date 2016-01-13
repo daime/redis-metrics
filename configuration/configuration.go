@@ -6,19 +6,27 @@ import (
 	"os"
 )
 
+type Redis struct {
+	Host  string `json:"host"`
+	Port  int    `json:"port"`
+	Alias string `json:"alias"`
+}
+
+type Statsd struct {
+	Host string `json:"host"`
+	Port int    `json:"port"`
+}
+
 // Configuration stores parsed data from JSON configuration file.
 type Configuration struct {
 	// Interval stores how often to query redis about its information.
 	Interval int64 `json:"interval"`
-	// Addresses stores a list of redis instances to query.
-	Addresses []string `json:"addresses"`
+	// Redis stores host port and the aliases for the redis instances.
+	Redis []Redis `json:"redis"`
 	// Metrics stores a list of redis infomations to send to statsd.
 	Metrics []string `json:"metrics"`
 	// Statsd stores host and port that will receive the metrics.
-	Statsd struct {
-		Host string `json:"host"`
-		Port int    `json:"port"`
-	} `json:"statsd"`
+	Statsd Statsd `json:"statsd"`
 }
 
 // Load reads, parses and returns data from JSON configuration file parsed

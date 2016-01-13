@@ -23,6 +23,7 @@ dependencies:
 
 test:
 	go test ./...
+	go test -race ./...
 
 watch:
 	watch -n ${WATCH_INTERVAL} make clean test
